@@ -15,7 +15,7 @@ const User = (props) => {
   const { onDelete, onBookMark } = props;
 
   return (
-    <tr key={_id}>
+    <tr>
       <td>{name}</td>
       <td>
         {qualities.map((qualitie) => (
