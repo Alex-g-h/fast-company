@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const SearchStatus = ({ length }) => {
   const formatClass = () => {
@@ -25,7 +26,7 @@ const SearchStatus = ({ length }) => {
         default:
           break;
       }
-    } else if ((5 <= number && number <= 20) || number === 1) {
+    } else if ((number >= 5 && number <= 20) || number === 1) {
       subject = "человек";
       verb = "тусанет";
     } else {
@@ -34,7 +35,7 @@ const SearchStatus = ({ length }) => {
       verb = "тусанут";
     }
 
-    let msg = `${String(number)} ${subject} ${verb} с тобой сегодня`;
+    const msg = `${String(number)} ${subject} ${verb} с тобой сегодня`;
     return msg;
   };
 
@@ -43,6 +44,10 @@ const SearchStatus = ({ length }) => {
       <span className={formatClass()}>{renderPhrase(length)}</span>
     </h3>
   );
+};
+
+SearchStatus.propTypes = {
+  length: PropTypes.number.isRequired
 };
 
 export default SearchStatus;
