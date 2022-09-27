@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { paginate } from "../utils/paginate";
 import Pagination from "./pagination";
 import User from "./user";
@@ -12,6 +12,16 @@ const Users = ({ users, ...rest }) => {
   const handlePageChange = (pageIndex) => {
     setCurrentPage(pageIndex);
   };
+
+  /**
+   * If selected page is the last page and
+   * items count has become not enough for this page then
+   * current page force change to previous one.
+   */
+  useEffect(() => {
+    const pageCount = Math.ceil(count / pageSize);
+    if (pageCount < currentPage) setCurrentPage(currentPage - 1);
+  });
 
   const userCrop = paginate(users, currentPage, pageSize);
 
