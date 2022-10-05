@@ -13,8 +13,12 @@ module.exports = {
   rules: {
     indent: ["error", 2, { SwitchCase: 1 }],
     semi: [2, "always"],
-    "space-before-function-paren": ["error", "never"],
+    "space-before-function-paren": [
+      "error",
+      { anonymous: "always", named: "never" }
+    ],
     quotes: ["error", "double", { allowTemplateLiterals: true }],
-    "multiline-ternary": ["error", "never"]
+    "multiline-ternary": ["error", "always-multiline"]
+    // "operator-linebreak": ["error", "none"]
   }
 };
