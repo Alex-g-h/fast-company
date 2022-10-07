@@ -5,7 +5,7 @@ const BookMark = ({ status }) => {
   const classes = "bi text-danger bi-heart";
   const bookmarkClass = status ? classes + "-fill" : classes;
 
-  return <i className={bookmarkClass}></i>;
+  return <i className={bookmarkClass} role="button"></i>;
 };
 
 BookMark.propTypes = {
