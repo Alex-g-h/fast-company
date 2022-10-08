@@ -15,8 +15,6 @@ const Users = () => {
   const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
   const [users, setUsers] = useState();
 
-  if (!users) return "Loading ...";
-
   // initialize users async
   useEffect(() => {
     api.users.fetchAll().then((users) => {
@@ -80,6 +78,8 @@ const Users = () => {
   const clearFilter = () => {
     setSelectedProf();
   };
+
+  if (!users) return "Loading ...";
 
   return (
     <>
