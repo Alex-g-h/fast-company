@@ -83,8 +83,7 @@ const Users = () => {
 
   return (
     <>
-      <SearchStatus length={count} />
-      <div className="d-flex flex-row m-3 flex-shrink p-3">
+      <div className="d-flex flex-row flex-shrink">
         {professions && users.length > 0 && (
           <>
             <div className="d-flex flex-column m-3">
@@ -99,25 +98,28 @@ const Users = () => {
             </div>
           </>
         )}
-        {usersCrop && usersCrop.length > 0 && (
-          <div className="d-flex flex-column m-3">
-            <UsersTable
-              users={usersCrop}
-              onSort={handleSort}
-              selectedSort={sortBy}
-              onDelete={handleDelete}
-              onBookMark={handleToggleBookMark}
-            />
-            <div className="d-flex justify-content-center">
-              <Pagination
-                itemsCount={count}
-                pageSize={pageSize}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
+        <div className="d-flex flex-column m-3">
+          <SearchStatus length={count} />
+          {usersCrop && usersCrop.length > 0 && (
+            <div className="d-flex flex-column m-3">
+              <UsersTable
+                users={usersCrop}
+                onSort={handleSort}
+                selectedSort={sortBy}
+                onDelete={handleDelete}
+                onBookMark={handleToggleBookMark}
               />
+              <div className="d-flex justify-content-center">
+                <Pagination
+                  itemsCount={count}
+                  pageSize={pageSize}
+                  currentPage={currentPage}
+                  onPageChange={handlePageChange}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </>
   );
