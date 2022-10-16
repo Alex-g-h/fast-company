@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import api from "../api";
 import Quality from "./quality";
 import { useHistory } from "react-router-dom";
+import Rating from "./rating";
 
 const UserInfo = ({ id }) => {
   const [user, setUser] = useState();
@@ -24,8 +25,8 @@ const UserInfo = ({ id }) => {
           <Quality key={quality._id} {...quality} />
         ))}
       </div>
-      <p>completedMeetings: {completedMeetings}</p>
-      <h3>Rate: {rate}</h3>
+      <p>Встретился, раз: {completedMeetings}</p>
+      <Rating key={id} rating={rate} />
       <button
         className="btn btn-secondary mt-2"
         onClick={() => {
