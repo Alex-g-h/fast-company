@@ -8,7 +8,7 @@ export function validator(data, config) {
         statusWrongValidate = data.trim() === "";
         break;
       case "isEmail": {
-        const emailRegExp = / ^\S+@\S+\.\S+$/g;
+        const emailRegExp = /^\S+@\S+\.\S+$/g;
         statusWrongValidate = !emailRegExp.test(data);
         break;
       }
