@@ -30,10 +30,11 @@ const TextField = ({ label, type, name, value, onChange, error }) => {
             type="button"
             onClick={toggleShowPassword}
           >
-            <i className={"bi bi-eye" + (showPassword ? "-slash" : "")}></i>
+            <i className={"bi bi-eye" + (showPassword ? "-slash" : "")} />
           </button>
         )}
-        {error && <div className="invalid-feedback">{error}</div>}
+        <div className="invalid-feedback">{error}</div>
+        {/* {error && <div className="invalid-feedback">{error}</div>} */}
       </div>
     </div>
   );
