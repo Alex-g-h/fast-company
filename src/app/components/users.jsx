@@ -6,6 +6,7 @@ import api from "../api";
 import SearchStatus from "./searchStatus";
 import UsersTable from "./usersTable";
 import _ from "lodash";
+import SearchUsers from "./searchUsers";
 
 const Users = () => {
   const pageSize = 8;
@@ -14,6 +15,7 @@ const Users = () => {
   const [selectedProf, setSelectedProf] = useState();
   const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
   const [users, setUsers] = useState();
+  const [searchUsers, setSearchUsers] = useState("");
 
   // initialize users async
   useEffect(() => {
@@ -35,8 +37,9 @@ const Users = () => {
     setUsers(newUsers);
   };
 
-  const handleProffesionSelect = (item) => {
+  const handleProfessionSelect = (item) => {
     setSelectedProf(item);
+    setSearchUsers("");
   };
 
   const handlePageChange = (pageIndex) => {
@@ -44,6 +47,11 @@ const Users = () => {
   };
 
   const handleSort = (item) => setSortBy(item);
+
+  const handleSearchUsers = ({ target }) => {
+    setSelectedProf();
+    setSearchUsers(target.value);
+  };
 
   /**
    * If selected page is the last page and
@@ -66,9 +74,18 @@ const Users = () => {
     setCurrentPage(1);
   }, [selectedProf]);
 
+  const SearchUsersFilterFunc = (user) => {
+    const regexp = new RegExp(searchUsers, "gi");
+    return regexp.test(user.name);
+  };
+
+  const searchedUsers = searchUsers
+    ? users.filter(SearchUsersFilterFunc)
+    : users;
+
   const filteredUsers = selectedProf
     ? users.filter((user) => user.profession._id === selectedProf._id)
-    : users;
+    : searchedUsers;
 
   const count = filteredUsers ? filteredUsers.length : 0;
   const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
@@ -77,6 +94,7 @@ const Users = () => {
 
   const clearFilter = () => {
     setSelectedProf();
+    setSearchUsers("");
   };
 
   if (!users) return "Loading ...";
@@ -90,7 +108,7 @@ const Users = () => {
               <GroupList
                 selectedItem={selectedProf}
                 items={professions}
-                onItemSelect={handleProffesionSelect}
+                onItemSelect={handleProfessionSelect}
               />
               <button className="btn btn-secondary mt-2" onClick={clearFilter}>
                 Очистить
@@ -100,6 +118,11 @@ const Users = () => {
         )}
         <div className="d-flex flex-column m-3">
           <SearchStatus length={count} />
+          <SearchUsers
+            value={searchUsers}
+            searchedUsersLength={count}
+            onChange={handleSearchUsers}
+          />
           {usersCrop && usersCrop.length > 0 && (
             <div className="d-flex flex-column m-3">
               <UsersTable
