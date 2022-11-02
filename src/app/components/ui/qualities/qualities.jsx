@@ -2,19 +2,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import Quality from "./quality";
 
-const QualitiesList = ({ qualities }) => {
+const Qualities = ({ qualities }) => {
   return (
     <>
       {" "}
-      {qualities.map((qualitie) => (
-        <Quality key={qualitie._id} {...qualitie} />
+      {qualities.map((quality) => (
+        <Quality key={quality._id} {...quality} />
       ))}
     </>
   );
 };
 
-QualitiesList.propTypes = {
+Qualities.propTypes = {
   qualities: PropTypes.array.isRequired
 };
 
-export default QualitiesList;
+export default Qualities;

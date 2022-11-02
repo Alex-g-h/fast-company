@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import api from "../api";
-import Quality from "./quality";
+import api from "../../../api";
+import { Quality } from "../../ui/qualities";
 import { useHistory } from "react-router-dom";
-import Rating from "./rating";
+import Rating from "../../common/rating";
 
-const UserInfo = ({ id }) => {
+const UserPage = ({ id }) => {
   const [user, setUser] = useState();
   const history = useHistory();
 
   // async loading object
-  useEffect(() => { api.users.getById(id).then((user) => setUser(user)); }, []);
+  useEffect(() => {
+    api.users.getById(id).then((user) => setUser(user));
+  }, []);
 
   if (!user) return "Loading ...";
 
@@ -39,8 +41,8 @@ const UserInfo = ({ id }) => {
   );
 };
 
-UserInfo.propTypes = {
+UserPage.propTypes = {
   id: PropTypes.string.isRequired
 };
 
-export default UserInfo;
+export default UserPage;
