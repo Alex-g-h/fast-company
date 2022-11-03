@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from "react";
 import TextField from "../common/form/textField";
 import { validator } from "../../utils/validator";
+import api from "../../api";
 
-const LoginForm = () => {
-  const [data, setData] = useState({ email: "", password: "" });
+import SelectField from "../common/form/selectField";
+
+const RegisterForm = () => {
+  const [data, setData] = useState({ email: "", password: "", profession: "" });
   const [errors, setErrors] = useState({});
+  const [professions, setProfession] = useState();
+
+  /**
+   * Asynchroniously initialize professions array at the first page render
+   */
+  useEffect(() => {
+    api.professions.fetchAll().then((profs) => setProfession(profs));
+  }, []);
 
   const handleChange = ({ target }) => {
     setData((prevData) => ({
@@ -30,6 +41,9 @@ const LoginForm = () => {
         message: "Password must be at least 8 symbols",
         value: 8
       }
+    },
+    profession: {
+      isRequired: { message: "Profession is required" }
     }
   };
 
@@ -79,6 +93,16 @@ const LoginForm = () => {
         onChange={handleChange}
         error={errors.password}
       />
+      {
+        <SelectField
+          label="Choose your profession"
+          value={data.profession}
+          onChange={handleChange}
+          defaultOption="Choose ..."
+          options={professions}
+          error={errors.profession}
+        />
+      }
       <button
         type="submit"
         disabled={!isValid}
@@ -90,4 +114,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

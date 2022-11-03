@@ -11,7 +11,7 @@ function App() {
       <NavBar></NavBar>
       <Switch>
         <Route path="/" exact component={Main}></Route>
-        <Route path="/login" component={Login}></Route>
+        <Route path="/login/:type?" component={Login}></Route>
         <Route path="/users/:userId?" component={UsersLayout}></Route>
       </Switch>
     </>
