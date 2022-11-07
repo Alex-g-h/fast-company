@@ -4,25 +4,29 @@ import { validator } from "../../utils/validator";
 import api from "../../api";
 import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
+import MultiSelectField from "../common/form/multiSelectField";
 
 const RegisterForm = () => {
   const [data, setData] = useState({
     email: "",
     password: "",
     profession: "",
-    sex: "male"
+    sex: "male",
+    qualities: []
   });
   const [errors, setErrors] = useState({});
   const [professions, setProfession] = useState();
+  const [qualities, setQualities] = useState({});
 
   /**
    * Asynchroniously initialize professions array at the first page render
    */
   useEffect(() => {
     api.professions.fetchAll().then((profs) => setProfession(profs));
+    api.qualities.fetchAll().then((quals) => setQualities(quals));
   }, []);
 
-  const handleChange = ({ target }) => {
+  const handleChange = (target) => {
     setData((prevData) => ({
       ...prevData,
       [target.name]: target.value
@@ -59,7 +63,14 @@ const RegisterForm = () => {
   const validate = () => {
     const errors = validator(data, validatorConfig);
     for (const fieldName in data) {
-      if (data[fieldName].trim() === "") {
+      let isEmpty = false;
+      if (Array.isArray(data[fieldName])) {
+        isEmpty = data[fieldName].length === 0;
+      } else {
+        isEmpty = data[fieldName].trim() === "";
+      }
+
+      if (isEmpty) {
         errors[fieldName] = `${fieldName} is required`;
       }
     }
@@ -114,8 +125,14 @@ const RegisterForm = () => {
         ]}
         value={data.sex}
         name="sex"
-        label="Sex"
+        label="Choose your sex"
         onChange={handleChange}
+      />
+      <MultiSelectField
+        label="Choose your qualities"
+        options={qualities}
+        onChange={handleChange}
+        name="qualities"
       />
       <button
         type="submit"
