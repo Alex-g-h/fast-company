@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import TextField from "../common/form/textField";
-// import { validator } from "../../utils/validator";
+import { validator } from "../../utils/validator";
 import CheckBoxField from "../common/form/checkBoxField";
-import * as yup from "yup";
 
 const LoginForm = () => {
   const [data, setData] = useState({ email: "", password: "", stayOn: false });
@@ -15,57 +14,33 @@ const LoginForm = () => {
     }));
   };
 
-  const validateScheme = yup.object().shape({
-    password: yup
-      .string()
-      .required("Password is required")
-      .matches(
-        /^(?=.*[A-Z])/,
-        "Password doesn't contain at least one capital letter"
-      )
-      .matches(/(?=.*[0-9])/, "Password doesn't contain at least one digit")
-      .matches(
-        /(?=.*[!@#$%^&*])/,
-        "Password must contains one of special symbols '!@#$%^&*'"
-      )
-      .matches(/(?=.{8,})/, "Password must be at least 8 symbols"),
-    email: yup
-      .string()
-      .required("Email is required")
-      .email("Wrong email address")
-  });
-
-  // const validatorConfig = {
-  //   email: {
-  //     isRequired: { message: "Email is required" },
-  //     isEmail: { message: "Wrong email address" }
-  //   },
-  //   password: {
-  //     isRequired: { message: "Password is required" },
-  //     isCapitalSymbol: {
-  //       message: "Password doesn't contain at least one capital letter"
-  //     },
-  //     isContainDigit: {
-  //       message: "Password doesn't contain at least one digit"
-  //     },
-  //     min: {
-  //       message: "Password must be at least 8 symbols",
-  //       value: 8
-  //     }
-  //   }
-  // };
+  const validatorConfig = {
+    email: {
+      isRequired: { message: "Email is required" },
+      isEmail: { message: "Wrong email address" }
+    },
+    password: {
+      isRequired: { message: "Password is required" },
+      isCapitalSymbol: {
+        message: "Password doesn't contain at least one capital letter"
+      },
+      isContainDigit: {
+        message: "Password doesn't contain at least one digit"
+      },
+      min: {
+        message: "Password must be at least 8 symbols",
+        value: 8
+      }
+    }
+  };
 
   useEffect(() => {
     validate();
   }, [data]);
 
   const validate = () => {
-    // const errors = validator(data, validatorConfig);
-    validateScheme
-      .validate(data)
-      .then(() => setErrors({}))
-      .catch((error) => setErrors({ [error.path]: error.message }));
-    // setErrors(errors);
+    const errors = validator(data, validatorConfig);
+    setErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
