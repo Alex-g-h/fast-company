@@ -8,11 +8,11 @@ import UsersLayout from "./layouts/users";
 function App() {
   return (
     <>
-      <NavBar></NavBar>
+      <NavBar />
       <Switch>
         <Route path="/" exact component={Main}></Route>
         <Route path="/login/:type?" component={Login}></Route>
-        <Route path="/users/:userId?" component={UsersLayout}></Route>
+        <Route path="/users/:userId?/:edit?" component={UsersLayout}></Route>
       </Switch>
     </>
   );

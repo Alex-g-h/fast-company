@@ -32,10 +32,10 @@ const UserPage = ({ id }) => {
       <button
         className="btn btn-secondary mt-2"
         onClick={() => {
-          history.push("/users");
+          history.push(`/users/${id}/edit`);
         }}
       >
-        Все пользователи
+        Изменить
       </button>
     </>
   );

@@ -58,25 +58,19 @@ const NavBar = () => {
           id="main"
           role="tabpanel"
           aria-labelledby="main-tab"
-        >
-          123
-        </div>
+        ></div>
         <div
           className="tab-pane"
           id="login"
           role="tabpanel"
           aria-labelledby="login-tab"
-        >
-          456
-        </div>
+        ></div>
         <div
           className="tab-pane"
           id="users"
           role="tabpanel"
           aria-labelledby="users-tab"
-        >
-          789
-        </div>
+        ></div>
       </div>
     </>
   );
