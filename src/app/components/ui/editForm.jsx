@@ -64,7 +64,7 @@ const EditForm = ({ id }) => {
       .catch((e) => {
         console.warn(`User #${id} not found`);
       });
-  }, [qualities]);
+  }, []);
 
   const handleChange = (target) => {
     setData((prevData) => ({
