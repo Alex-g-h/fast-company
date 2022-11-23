@@ -142,7 +142,7 @@ const EditForm = ({ id }) => {
     return qualitiesArray;
   };
 
-  if (!data) {
+  if (!data || !professions || qualities.length === 0) {
     return <h5>Loading ...</h5>;
   }
 
