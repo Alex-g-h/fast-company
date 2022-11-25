@@ -6,9 +6,11 @@ import { useHistory } from "react-router-dom";
 import Rating from "../../common/rating";
 import CommentsList from "../../common/comments/commentsList";
 import Avatar from "../../common/avatar";
+import NewCommentForm from "../../common/comments/newCommentForm";
 
 const UserPage = ({ id }) => {
   const [user, setUser] = useState();
+  const [updateListToggle, setUpdateListToggle] = useState(false);
   const history = useHistory();
 
   // async loading object
@@ -19,6 +21,11 @@ const UserPage = ({ id }) => {
   if (!user) return "Loading ...";
 
   const { name, qualities, profession, completedMeetings, rate } = user;
+
+  const handleAddComment = ({ userId, content }) => {
+    api.comments.add({ pageId: id, userId, content });
+    setUpdateListToggle((prevState) => !prevState);
+  };
 
   return (
     <>
@@ -70,38 +77,9 @@ const UserPage = ({ id }) => {
           </div>
 
           <div className="col-md-8">
-            <div className="card mb-2">
-              <div className="card-body">
-                <div>
-                  <h2>New comment</h2>
-                  <div className="mb-4">
-                    <select className="form-select" name="userId" value="">
-                      <option disabled value="" selected>
-                        Выберите пользователя
-                      </option>
+            <NewCommentForm handleAddComment={handleAddComment} />
 
-                      <option>Доктор</option>
-                      <option>Тусер</option>
-                    </select>
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="exampleFormControlTextarea1"
-                      className="form-label"
-                    >
-                      Сообщение
-                    </label>
-                    <textarea
-                      className="form-control"
-                      id="exampleFormControlTextarea1"
-                      rows="3"
-                    ></textarea>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <CommentsList id={id} />
+            <CommentsList id={id} updateListToggle={updateListToggle} />
           </div>
         </div>
       </div>

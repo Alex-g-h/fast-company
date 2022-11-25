@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import api from "../../../api";
 import Comment from "./comment";
 
-const CommentsList = ({ id }) => {
+const CommentsList = ({ id, updateListToggle }) => {
   const [comments, setComments] = useState([]);
 
   async function fetchComments() {
@@ -40,7 +40,7 @@ const CommentsList = ({ id }) => {
 
   useEffect(() => {
     fetchComments();
-  }, []);
+  }, [updateListToggle]);
 
   const handleCommentDelete = (id) => {
     api.comments.remove(id);
@@ -52,6 +52,9 @@ const CommentsList = ({ id }) => {
   if (isLoadingOrEmpty) {
     return "";
   }
+
+  // sort by creation date
+  comments.sort((c1, c2) => c2.created_at - c1.created_at);
 
   return (
     <div className="card mb-3">
@@ -76,7 +79,8 @@ const CommentsList = ({ id }) => {
 };
 
 CommentsList.propTypes = {
-  id: PropTypes.string
+  id: PropTypes.string,
+  updateListToggle: PropTypes.bool
 };
 
 export default CommentsList;
