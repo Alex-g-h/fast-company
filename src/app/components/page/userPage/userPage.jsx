@@ -36,6 +36,7 @@ const UserPage = ({ id }) => {
               <div className="card-body">
                 <button
                   className="position-absolute top-0 end-0 btn btn-light btn-sm"
+                  style={{ zIndex: 1 }}
                   onClick={() => {
                     history.push(`/users/${id}/edit`);
                   }}
