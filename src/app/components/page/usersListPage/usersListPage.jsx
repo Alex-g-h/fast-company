@@ -18,7 +18,6 @@ const UsersListPage = () => {
   const [searchUsers, setSearchUsers] = useState("");
 
   const { users } = useUser();
-  console.log("User list page: ", users);
 
   const handleDelete = (userId) => {
     // const newUsers = users.filter((user) => user._id !== userId);
