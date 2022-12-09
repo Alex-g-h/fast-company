@@ -44,7 +44,7 @@ const UserProvider = ({ children }) => {
   }
 
   return (
-    <UserContext.Provider value={{ users }}>
+    <UserContext.Provider value={{ isLoading, users }}>
       {!isLoading ? children : "Loading ..."}
     </UserContext.Provider>
   );
@@ -59,4 +59,4 @@ UserProvider.propTypes = {
 
 export default UserProvider;
 
-export { useUser as useUsers };
+export { useUser };

@@ -7,7 +7,7 @@ import SearchStatus from "../../ui/searchStatus";
 import UsersTable from "../../ui/usersTable";
 import _ from "lodash";
 import SearchUsers from "../../ui/searchUsers";
-import { useUsers as useUser } from "../../../hooks/useUser";
+import { useUser } from "../../../hooks/useUser";
 
 const UsersListPage = () => {
   const pageSize = 8;
