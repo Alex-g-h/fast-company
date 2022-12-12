@@ -14,6 +14,7 @@ export const useAuth = () => {
 };
 
 const AuthProvider = ({ children }) => {
+  const fireBaseEndPoint = "https://identitytoolkit.googleapis.com/v1/";
   const [currentUser, setCurrentUser] = useState({});
   const [error, setError] = useState(null);
 
@@ -26,7 +27,7 @@ const AuthProvider = ({ children }) => {
   }, [error]);
 
   async function signUp({ email, password, ...rest }) {
-    const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`;
+    const url = `${fireBaseEndPoint}accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`;
 
     try {
       const { data } = await httpAuth.post(url, {
@@ -48,6 +49,32 @@ const AuthProvider = ({ children }) => {
     }
   }
 
+  async function signIn({ email, password }) {
+    const url = `${fireBaseEndPoint}accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_KEY}`;
+
+    try {
+      const { data } = await httpAuth.post(url, {
+        email,
+        password,
+        returnSecureToken: true
+      });
+      setTokens(data);
+    } catch (error) {
+      errorCatcher(error);
+      const { code, message } = error.response.data.error;
+      if (code === 400) {
+        if (message === "INVALID_PASSWORD") {
+          const errorObject = { password: "Invalid password" };
+          throw errorObject;
+        }
+        if (message === "EMAIL_NOT_FOUND") {
+          const errorObject = { email: "E-mail not found" };
+          throw errorObject;
+        }
+      }
+    }
+  }
+
   async function createUser(data) {
     try {
       const { content } = await userService.create(data);
@@ -63,7 +90,7 @@ const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ signUp, currentUser }}>
+    <AuthContext.Provider value={{ signUp, signIn, currentUser }}>
       {children}
     </AuthContext.Provider>
   );
