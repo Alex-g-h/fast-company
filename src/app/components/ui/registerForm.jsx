@@ -77,7 +77,7 @@ const RegisterForm = () => {
 
   const isValid = Object.keys(errors).length === 0;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(); // prevent page reload
 
     // validation
@@ -86,8 +86,11 @@ const RegisterForm = () => {
 
     const newData = { ...data, qualities: data.qualities.map((q) => q.value) };
 
-    console.log(newData);
-    signUp(newData);
+    try {
+      await signUp(newData);
+    } catch (error) {
+      setErrors(error);
+    }
   };
 
   return (

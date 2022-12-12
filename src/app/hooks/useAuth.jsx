@@ -36,9 +36,15 @@ const AuthProvider = ({ children }) => {
       });
       setTokens(data);
       await createUser({ _id: data.localId, email, ...rest });
-      console.log("signup res:", data);
     } catch (error) {
       errorCatcher(error);
+      const { code, message } = error.response.data.error;
+      if (code === 400) {
+        if (message === "EMAIL_EXISTS") {
+          const errorObject = { email: "User with this e-mail already exists" };
+          throw errorObject;
+        }
+      }
     }
   }
 
