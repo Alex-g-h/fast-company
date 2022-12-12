@@ -48,7 +48,7 @@ const QualityProvider = ({ children }) => {
   }
 
   return (
-    <QaulityContext.Provider value={{ isLoading, getQuality }}>
+    <QaulityContext.Provider value={{ isLoading, getQuality, qualities }}>
       {" "}
       {children}{" "}
     </QaulityContext.Provider>
