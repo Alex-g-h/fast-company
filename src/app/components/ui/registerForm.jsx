@@ -16,6 +16,7 @@ const RegisterForm = () => {
     password: "",
     profession: "",
     sex: "male",
+    name: "",
     qualities: [],
     license: false
   });
@@ -42,6 +43,13 @@ const RegisterForm = () => {
     email: {
       isRequired: { message: "Email is required" },
       isEmail: { message: "Wrong email address" }
+    },
+    name: {
+      isRequired: { message: "Name is required" },
+      min: {
+        message: "Name must be at least 3 symbols",
+        value: 3
+      }
     },
     password: {
       isRequired: { message: "Password is required" },
@@ -106,6 +114,15 @@ const RegisterForm = () => {
         value={data.email}
         onChange={handleChange}
         error={errors.email}
+      />
+      <TextField
+        label="Name"
+        // type="email"
+        type="text"
+        name="name"
+        value={data.name}
+        onChange={handleChange}
+        error={errors.name}
       />
       <TextField
         label="Password"
