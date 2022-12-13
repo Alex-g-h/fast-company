@@ -27,8 +27,9 @@ jobs:
       - name: Build
         run: |
           npm install
-          npm CI=false run-script build
+          npm run-script build
         env:
+          CI: false
           REACT_APP_FIREBASE_KEY: ${{ secrets.REACT_APP_FIREBASE_KEY }}
 
       - name: Deploy
