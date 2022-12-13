@@ -6,6 +6,18 @@ on:
       - master
 
 jobs:
+  trying-to-use-environment-secrets:
+    runs-on: windows-latest
+    environment: test-env #<---The only difference we need to specify what environment to use for environment secrets
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Store variables
+        run: |
+          echo ${{ secrets.REACT_APP_FIREBASE_KEY }}
+          echo "REACT_APP_FIREBASE_KEY=${{ secrets.REACT_APP_FIREBASE_KEY }}"
+
   build:
     runs-on: windows-latest
     steps:
