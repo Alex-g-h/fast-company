@@ -7,7 +7,7 @@ on:
 
 jobs:
   trying-to-use-environment-secrets:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     environment: test-env #<---The only difference we need to specify what environment to use for environment secrets
     steps:
       - name: Checkout
@@ -19,7 +19,7 @@ jobs:
           echo "REACT_APP_FIREBASE_KEY=${{ secrets.REACT_APP_FIREBASE_KEY }}"
 
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v1
