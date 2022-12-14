@@ -7,7 +7,7 @@ import localStorageService, {
   setTokens
 } from "../services/localStorage.service";
 
-const httpAuth = axios.create();
+export const httpAuth = axios.create();
 
 const AuthContext = React.createContext();
 
