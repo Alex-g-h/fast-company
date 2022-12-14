@@ -19,11 +19,11 @@ http.interceptors.request.use(
 );
 
 function transformData(data) {
-  return data
+  return data && !data._id
     ? Object.keys(data).map((itemId) => ({
         ...data[itemId]
       }))
-    : [];
+    : data;
 }
 
 http.interceptors.response.use(
