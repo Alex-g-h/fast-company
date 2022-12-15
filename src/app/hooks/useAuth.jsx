@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import localStorageService, {
   setTokens
 } from "../services/localStorage.service";
+import { useHistory } from "react-router-dom";
 
 export const httpAuth = axios.create();
 
@@ -20,6 +21,7 @@ const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState();
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const history = useHistory();
 
   async function getUserData() {
     try {
@@ -50,6 +52,12 @@ const AuthProvider = ({ children }) => {
 
   function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  function logOut() {
+    localStorageService.removeAuthData();
+    setCurrentUser(null);
+    history.push("/");
   }
 
   async function signUp({ email, password, ...rest }) {
@@ -123,7 +131,9 @@ const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ signUp, signIn, currentUser, isLoading }}>
+    <AuthContext.Provider
+      value={{ signUp, signIn, currentUser, isLoading, logOut }}
+    >
       {!isLoading ? children : "Loading ..."}
     </AuthContext.Provider>
   );
