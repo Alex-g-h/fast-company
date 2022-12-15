@@ -4,14 +4,23 @@ import { useAuth } from "../../hooks/useAuth";
 import PropTypes from "prop-types";
 
 const ProtectedRoute = ({ component: Component, children, ...rest }) => {
-  const currentUser = useAuth();
+  const { currentUser } = useAuth();
 
   return (
     <Route
       {...rest}
       render={(props) => {
         if (!currentUser) {
-          return <Redirect to="/login/" />;
+          return (
+            <Redirect
+              to={{
+                pathname: "/login/",
+                state: {
+                  from: props.location
+                }
+              }}
+            />
+          );
         }
         return Component ? <Component {...props} /> : children;
       }}
@@ -21,6 +30,7 @@ const ProtectedRoute = ({ component: Component, children, ...rest }) => {
 
 ProtectedRoute.propTypes = {
   component: PropTypes.func,
+  location: PropTypes.object,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
