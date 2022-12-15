@@ -17,7 +17,7 @@ export const useAuth = () => {
 
 const AuthProvider = ({ children }) => {
   const fireBaseEndPoint = "https://identitytoolkit.googleapis.com/v1/";
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState();
   const [error, setError] = useState(null);
 
   async function getUserData() {
