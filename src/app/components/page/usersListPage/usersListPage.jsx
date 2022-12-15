@@ -2,22 +2,22 @@ import React, { useState, useEffect } from "react";
 import { paginate } from "../../../utils/paginate";
 import Pagination from "../../common/pagination";
 import GroupList from "../../common/groupList";
-import api from "../../../api";
 import SearchStatus from "../../ui/searchStatus";
 import UsersTable from "../../ui/usersTable";
 import _ from "lodash";
 import SearchUsers from "../../ui/searchUsers";
 import { useUser } from "../../../hooks/useUser";
+import { useProfession } from "../../../hooks/useProfession";
 
 const UsersListPage = () => {
   const pageSize = 8;
   const [currentPage, setCurrentPage] = useState(1);
-  const [professions, setProfession] = useState();
   const [selectedProf, setSelectedProf] = useState();
   const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
   const [searchUsers, setSearchUsers] = useState("");
 
   const { users } = useUser();
+  const { isLoading: isLoadingProfession, professions } = useProfession();
 
   const handleDelete = (userId) => {
     // const newUsers = users.filter((user) => user._id !== userId);
@@ -60,13 +60,6 @@ const UsersListPage = () => {
     if (pageCount < currentPage) setCurrentPage(currentPage - 1);
   });
 
-  /**
-   * Asynchroniously initialize professions array at the first page render
-   */
-  useEffect(() => {
-    api.professions.fetchAll().then((profs) => setProfession(profs));
-  }, []);
-
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedProf]);
@@ -81,7 +74,7 @@ const UsersListPage = () => {
     : users;
 
   const filteredUsers = selectedProf
-    ? users.filter((user) => user.profession._id === selectedProf._id)
+    ? users.filter((user) => user.profession === selectedProf._id)
     : searchedUsers;
 
   const count = filteredUsers ? filteredUsers.length : 0;
@@ -99,7 +92,7 @@ const UsersListPage = () => {
   return (
     <>
       <div className="d-flex flex-row flex-shrink">
-        {professions && users.length > 0 && (
+        {professions && !isLoadingProfession && users.length > 0 && (
           <>
             <div className="d-flex flex-column m-3">
               <GroupList

@@ -7,14 +7,7 @@ import { Link } from "react-router-dom";
 import Rating from "../common/rating/rating";
 import Profession from "./profession";
 
-const UsersTable = ({
-  users,
-  onSort,
-  selectedSort,
-  onBookMark,
-  onDelete,
-  ...rest
-}) => {
+const UsersTable = ({ users, onSort, selectedSort, onBookMark, ...rest }) => {
   const columns = {
     name: {
       path: "name",
@@ -45,17 +38,6 @@ const UsersTable = ({
           </div>
         </>
       )
-    },
-    delete: {
-      component: (user) => (
-        <button
-          type="button"
-          className="btn btn-danger"
-          onClick={() => onDelete(user._id)}
-        >
-          delete
-        </button>
-      )
     }
   };
 
@@ -73,8 +55,7 @@ UsersTable.propTypes = {
   users: PropTypes.array.isRequired,
   onSort: PropTypes.func.isRequired,
   selectedSort: PropTypes.object.isRequired,
-  onBookMark: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired
+  onBookMark: PropTypes.func.isRequired
 };
 
 export default UsersTable;
