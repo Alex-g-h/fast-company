@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import api from "../../../api";
 import CommentsList from "../../common/comments/commentsList";
@@ -6,19 +6,16 @@ import NewCommentForm from "../../common/comments/newCommentForm";
 import UserCompletedMeetings from "./userCompletedMeetings";
 import UserQualities from "./userQualities";
 import UserInfo from "./UserInfo";
+import { useUser } from "../../../hooks/useUser";
 
 const UserPage = ({ id }) => {
-  const [user, setUser] = useState();
   const [updateListToggle, setUpdateListToggle] = useState(false);
-
-  // async loading object
-  useEffect(() => {
-    api.users.getById(id).then((user) => setUser(user));
-  }, []);
+  const { getUserById } = useUser();
+  const user = getUserById(id);
 
   if (!user) return "Loading ...";
 
-  const { name, qualities, profession, completedMeetings, rate } = user;
+  const { qualities, completedMeetings } = user;
 
   const handleAddComment = ({ userId, content }) => {
     api.comments.add({ pageId: id, userId, content });
@@ -30,13 +27,7 @@ const UserPage = ({ id }) => {
       <div className="container">
         <div className="row gutters-sm">
           <div className="col-md-4 mb-3">
-            <UserInfo
-              id={id}
-              name={name}
-              professionName={profession.name}
-              rate={rate}
-            />
-
+            <UserInfo user={user} />
             <UserQualities qualities={qualities} />
             <UserCompletedMeetings completedMeetings={completedMeetings} />
           </div>

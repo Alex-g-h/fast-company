@@ -43,8 +43,12 @@ const UserProvider = ({ children }) => {
     setLoading(false);
   }
 
+  function getUserById(userId) {
+    return users.find((user) => user._id === userId);
+  }
+
   return (
-    <UserContext.Provider value={{ isLoading, users }}>
+    <UserContext.Provider value={{ isLoading, users, getUserById }}>
       {!isLoading ? children : "Loading ..."}
     </UserContext.Provider>
   );

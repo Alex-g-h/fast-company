@@ -3,9 +3,13 @@ import PropTypes from "prop-types";
 import Rating from "../../common/rating";
 import Avatar from "../../common/avatar";
 import { useHistory } from "react-router-dom";
+import { useProfession } from "../../../hooks/useProfession";
 
-const UserInfo = ({ id, name, professionName, rate }) => {
+const UserInfo = ({ user }) => {
   const history = useHistory();
+  const { getProfession } = useProfession();
+  const { id, name, profession, image, rate } = user;
+  const { name: professionName } = getProfession(profession);
 
   return (
     <div className="card mb-3">
@@ -20,7 +24,7 @@ const UserInfo = ({ id, name, professionName, rate }) => {
           <i className="bi bi-gear"></i>
         </button>
         <div className="d-flex flex-column align-items-center text-center position-relative">
-          <Avatar name={name} width="150" />
+          <Avatar srcName={image} width="150" />
           <div className="mt-3">
             <h4>{name}</h4>
             <p className="text-secondary mb-1">{professionName}</p>
@@ -33,10 +37,12 @@ const UserInfo = ({ id, name, professionName, rate }) => {
 };
 
 UserInfo.propTypes = {
-  id: PropTypes.string,
-  name: PropTypes.string,
-  professionName: PropTypes.string,
-  rate: PropTypes.number
+  // id: PropTypes.string,
+  // name: PropTypes.string,
+  // profession: PropTypes.string,
+  // rate: PropTypes.number,
+  // image: PropTypes.string
+  user: PropTypes.object
 };
 
 export default UserInfo;
