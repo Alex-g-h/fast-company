@@ -5,7 +5,7 @@ import CommentsList from "../../common/comments/commentsList";
 import NewCommentForm from "../../common/comments/newCommentForm";
 import UserCompletedMeetings from "./userCompletedMeetings";
 import UserQualities from "./userQualities";
-import UserInfo from "./UserInfo";
+import UserInfo from "./userInfo";
 import { useUser } from "../../../hooks/useUser";
 
 const UserPage = ({ id }) => {

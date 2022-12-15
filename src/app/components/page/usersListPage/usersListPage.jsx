@@ -8,6 +8,7 @@ import _ from "lodash";
 import SearchUsers from "../../ui/searchUsers";
 import { useUser } from "../../../hooks/useUser";
 import { useProfession } from "../../../hooks/useProfession";
+import { useAuth } from "../../../hooks/useAuth";
 
 const UsersListPage = () => {
   const pageSize = 8;
@@ -18,6 +19,7 @@ const UsersListPage = () => {
 
   const { users } = useUser();
   const { isLoading: isLoadingProfession, professions } = useProfession();
+  const { currentUser } = useAuth();
 
   const handleDelete = (userId) => {
     // const newUsers = users.filter((user) => user._id !== userId);
@@ -64,18 +66,24 @@ const UsersListPage = () => {
     setCurrentPage(1);
   }, [selectedProf]);
 
-  const SearchUsersFilterFunc = (user) => {
-    const regexp = new RegExp(searchUsers, "gi");
-    return regexp.test(user.name);
-  };
+  function filterUsers(data) {
+    const SearchUsersFilterFunc = (user) => {
+      const regexp = new RegExp(searchUsers, "gi");
+      return regexp.test(user.name);
+    };
 
-  const searchedUsers = searchUsers
-    ? users.filter(SearchUsersFilterFunc)
-    : users;
+    const searchedUsers = searchUsers
+      ? users.filter(SearchUsersFilterFunc)
+      : users;
 
-  const filteredUsers = selectedProf
-    ? users.filter((user) => user.profession === selectedProf._id)
-    : searchedUsers;
+    const filteredUsers = selectedProf
+      ? users.filter((user) => user.profession === selectedProf._id)
+      : searchedUsers;
+
+    return filteredUsers.filter((user) => user._id !== currentUser._id);
+  }
+
+  const filteredUsers = filterUsers(users);
 
   const count = filteredUsers ? filteredUsers.length : 0;
   const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
