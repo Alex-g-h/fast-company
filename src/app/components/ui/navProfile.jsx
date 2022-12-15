@@ -16,7 +16,7 @@ const NavProfile = () => {
       <div className="btn dropdown-toggle d-flex align-items-center">
         <div className="me-2">{currentUser.name}</div>
         <Avatar
-          name={currentUser.name}
+          srcName={currentUser.image}
           width="40"
           classAddon="img-responsive"
         />

@@ -7,6 +7,7 @@ import localStorageService, {
   setTokens
 } from "../services/localStorage.service";
 import { useHistory } from "react-router-dom";
+import api from "../api";
 
 export const httpAuth = axios.create();
 
@@ -60,7 +61,7 @@ const AuthProvider = ({ children }) => {
     history.push("/");
   }
 
-  async function signUp({ email, password, ...rest }) {
+  async function signUp({ email, password, name, ...rest }) {
     const url = `${fireBaseEndPoint}accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`;
 
     try {
@@ -73,8 +74,10 @@ const AuthProvider = ({ children }) => {
       await createUser({
         _id: data.localId,
         email,
+        name,
         rate: randomInt(0, 5) / 2.0, // from 0 up to 5 with step 0.5
         completedMeetings: randomInt(0, 200),
+        image: api.avatarDiceBear(name),
         ...rest
       });
     } catch (error) {

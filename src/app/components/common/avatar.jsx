@@ -2,7 +2,7 @@ import React from "react";
 import api from "../../api";
 import PropTypes from "prop-types";
 
-const Avatar = ({ name, width, height, alternative, classAddon }) => {
+const Avatar = ({ name, srcName, width, height, alternative, classAddon }) => {
   const imgWidth = width ?? 100;
   const imgHeight = height ?? imgWidth;
   const altName = alternative ?? "avatar";
@@ -10,7 +10,7 @@ const Avatar = ({ name, width, height, alternative, classAddon }) => {
 
   return (
     <img
-      src={api.avatarDiceBear(name)}
+      src={srcName ?? api.avatarDiceBear(name)}
       width={imgWidth}
       height={imgHeight}
       alt={altName}
@@ -24,7 +24,8 @@ Avatar.propTypes = {
   width: PropTypes.string,
   height: PropTypes.string,
   alternative: PropTypes.string,
-  classAddon: PropTypes.string
+  classAddon: PropTypes.string,
+  srcName: PropTypes.string
 };
 
 export default Avatar;
