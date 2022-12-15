@@ -19,6 +19,7 @@ const AuthProvider = ({ children }) => {
   const fireBaseEndPoint = "https://identitytoolkit.googleapis.com/v1/";
   const [currentUser, setCurrentUser] = useState();
   const [error, setError] = useState(null);
+  const [isLoading, setLoading] = useState(true);
 
   async function getUserData() {
     try {
@@ -26,12 +27,16 @@ const AuthProvider = ({ children }) => {
       setCurrentUser(content);
     } catch (error) {
       errorCatcher(error);
+    } finally {
+      setLoading(false);
     }
   }
 
   useEffect(() => {
     if (localStorageService.getAccessToken()) {
       getUserData();
+    } else {
+      setLoading(false);
     }
   }, []);
 
@@ -118,8 +123,8 @@ const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ signUp, signIn, currentUser }}>
-      {children}
+    <AuthContext.Provider value={{ signUp, signIn, currentUser, isLoading }}>
+      {!isLoading ? children : "Loading ..."}
     </AuthContext.Provider>
   );
 };
