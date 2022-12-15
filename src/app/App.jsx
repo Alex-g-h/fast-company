@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ProfessionProvider from "./hooks/useProfession";
 import QualityProvider from "./hooks/useQuality";
 import AuthProvider from "./hooks/useAuth";
+import ProtectedRoute from "./components/common/protectedRoute";
 
 function App() {
   return (
@@ -18,12 +19,12 @@ function App() {
         <ProfessionProvider>
           <QualityProvider>
             <Switch>
-              <Route path="/" exact component={Main}></Route>
-              <Route path="/login/:type?" component={Login}></Route>
-              <Route
+              <Route path="/" exact component={Main} />
+              <Route path="/login/:type?" component={Login} />
+              <ProtectedRoute
                 path="/users/:userId?/:edit?"
                 component={UsersLayout}
-              ></Route>
+              />
               <Redirect to="/" />
             </Switch>
           </QualityProvider>
