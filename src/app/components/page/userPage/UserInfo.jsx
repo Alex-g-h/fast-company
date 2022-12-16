@@ -43,11 +43,6 @@ const UserInfo = ({ user }) => {
 };
 
 UserInfo.propTypes = {
-  // id: PropTypes.string,
-  // name: PropTypes.string,
-  // profession: PropTypes.string,
-  // rate: PropTypes.number,
-  // image: PropTypes.string
   user: PropTypes.object
 };
 

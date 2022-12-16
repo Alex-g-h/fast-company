@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import api from "../../../api";
 import Comment from "./comment";
+import { useUser } from "../../../hooks/useUser";
+import { useComment } from "../../../hooks/useComment";
 
-const CommentsList = ({ id, updateListToggle }) => {
-  const [comments, setComments] = useState([]);
+const CommentsList = () => {
+  const [commentsWithName, setCommentsWithName] = useState([]);
+
+  const { getUserById } = useUser();
+  const { comments, removeComment } = useComment(); // get all comments for this/opened user
 
   async function fetchComments() {
-    // get all comments for this user
-    const comments = await api.comments.fetchCommentsForUser(id);
-
     // get commentators ID and unify their
     const commentatorsIdAll = comments.map((comment) => comment.userId);
     const commentatorsIdUnique = [...new Set(commentatorsIdAll)];
 
     // prepare requests for commentators user data
     const commentatorsRequests = await commentatorsIdUnique.map((userId) =>
-      api.users.getById(userId)
+      getUserById(userId)
     );
 
     // get user's data for commentators
@@ -35,52 +35,44 @@ const CommentsList = ({ id, updateListToggle }) => {
       return commentWithName;
     });
 
-    setComments(commentsWithName);
+    setCommentsWithName(commentsWithName);
   }
 
   useEffect(() => {
     fetchComments();
-  }, [updateListToggle]);
+  }, [comments]);
 
   const handleCommentDelete = (id) => {
-    api.comments.remove(id);
-    fetchComments();
+    removeComment(id);
   };
 
-  const isLoadingOrEmpty = comments.length === 0;
+  const isLoadingOrEmpty = commentsWithName.length === 0;
 
   if (isLoadingOrEmpty) {
     return "";
   }
 
   // sort by creation date
-  comments.sort((c1, c2) => c2.created_at - c1.created_at);
+  commentsWithName.sort((c1, c2) => c2.created_at - c1.created_at);
 
   return (
     <div className="card mb-3">
       <div className="card-body">
         <h2>Comments</h2>
         <hr />
-        {comments.map((comment) => (
+        {commentsWithName.map((comment) => (
           <div key={comment._id} className="bg-light card-body mb-3">
             <div className="row">
-              <div className="col">
-                <Comment
-                  comment={comment}
-                  handleCommentDelete={handleCommentDelete}
-                />
-              </div>
+              <Comment
+                comment={comment}
+                handleCommentDelete={handleCommentDelete}
+              />
             </div>
           </div>
         ))}
       </div>
     </div>
   );
-};
-
-CommentsList.propTypes = {
-  id: PropTypes.string,
-  updateListToggle: PropTypes.bool
 };
 
 export default CommentsList;

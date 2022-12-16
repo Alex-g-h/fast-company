@@ -33,7 +33,7 @@ const QualityProvider = ({ children }) => {
 
   async function getQualitiesList() {
     try {
-      const { content } = await qualityService.get();
+      const { content } = await qualityService.fetchAll();
       setQualities(content);
       setLoading(false);
     } catch (error) {
@@ -49,8 +49,7 @@ const QualityProvider = ({ children }) => {
 
   return (
     <QaulityContext.Provider value={{ isLoading, getQuality, qualities }}>
-      {" "}
-      {children}{" "}
+      {!isLoading ? children : ""}
     </QaulityContext.Provider>
   );
 };

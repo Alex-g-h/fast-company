@@ -1,26 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import api from "../../../api";
 import CommentsList from "../../common/comments/commentsList";
 import NewCommentForm from "../../common/comments/newCommentForm";
 import UserCompletedMeetings from "./userCompletedMeetings";
 import UserQualities from "./userQualities";
 import UserInfo from "./userInfo";
 import { useUser } from "../../../hooks/useUser";
+import CommentProvider from "../../../hooks/useComment";
 
 const UserPage = ({ id }) => {
-  const [updateListToggle, setUpdateListToggle] = useState(false);
   const { getUserById } = useUser();
   const user = getUserById(id);
 
   if (!user) return "Loading ...";
 
   const { qualities, completedMeetings } = user;
-
-  const handleAddComment = ({ userId, content }) => {
-    api.comments.add({ pageId: id, userId, content });
-    setUpdateListToggle((prevState) => !prevState);
-  };
 
   return (
     <>
@@ -33,9 +27,10 @@ const UserPage = ({ id }) => {
           </div>
 
           <div className="col-md-8">
-            <NewCommentForm handleAddComment={handleAddComment} />
-
-            <CommentsList id={id} updateListToggle={updateListToggle} />
+            <CommentProvider>
+              <NewCommentForm />
+              <CommentsList />
+            </CommentProvider>
           </div>
         </div>
       </div>
