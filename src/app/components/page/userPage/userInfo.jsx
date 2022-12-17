@@ -15,6 +15,8 @@ const UserInfo = ({ user }) => {
 
   const isUserACurrentUser = user._id === currentUser._id;
 
+  console.log("tmp");
+
   return (
     <div className="card mb-3">
       <div className="card-body">
