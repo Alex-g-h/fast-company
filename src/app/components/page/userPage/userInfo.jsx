@@ -9,7 +9,7 @@ import { useAuth } from "../../../hooks/useAuth";
 const UserInfo = ({ user }) => {
   const history = useHistory();
   const { getProfession } = useProfession();
-  const { id, name, profession, image, rate } = user;
+  const { _id: id, name, profession, image, rate } = user;
   const { name: professionName } = getProfession(profession);
   const { currentUser } = useAuth();
 

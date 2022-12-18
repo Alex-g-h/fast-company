@@ -37,6 +37,21 @@ const UserProvider = ({ children }) => {
     }
   }
 
+  async function updateUser(user) {
+    try {
+      const { content } = await userService.update(user);
+      const newUsers = users.map((user) => {
+        if (user._id === content._id) {
+          return content;
+        }
+        return user;
+      });
+      setUsers(newUsers);
+    } catch (error) {
+      errorCatcher(error);
+    }
+  }
+
   function errorCatcher(error) {
     const { message } = error.response.data;
     setError(message);
@@ -48,7 +63,7 @@ const UserProvider = ({ children }) => {
   }
 
   return (
-    <UserContext.Provider value={{ isLoading, users, getUserById }}>
+    <UserContext.Provider value={{ isLoading, users, getUserById, updateUser }}>
       {!isLoading ? children : "Loading ..."}
     </UserContext.Provider>
   );

@@ -1,69 +1,59 @@
 import React, { useState, useEffect } from "react";
 import TextField from "../common/form/textField";
 import { validator } from "../../utils/validator";
-import api from "../../api";
 import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
+import { useUser } from "../../hooks/useUser";
+import { useQuality } from "../../hooks/useQuality";
+import { useProfession } from "../../hooks/useProfession";
 
 const EditForm = ({ id }) => {
   const [data, setData] = useState();
 
   const [errors, setErrors] = useState({});
-  const [professions, setProfession] = useState();
-  const [qualities, setQualities] = useState([]);
+  const [professionsWrapped, setProfessionWrapped] = useState();
+  const [qualitiesWrapped, setQualitiesWrapped] = useState([]);
+
+  const { qualities, getQuality } = useQuality();
+  const { professions } = useProfession();
+  const { getUserById, updateUser } = useUser();
 
   const history = useHistory();
 
-  /**
-   * Asynchroniously initialize professions array at the first page render
-   */
   useEffect(() => {
-    api.professions.fetchAll().then((data) => {
-      const professionsList = Object.keys(data).map((professionName) => ({
-        label: data[professionName].name,
-        value: data[professionName]._id
-      }));
-      setProfession(professionsList);
+    const qualitiesList = qualities.map((quality) => ({
+      label: quality.name,
+      value: quality._id,
+      color: quality.color
+    }));
+    setQualitiesWrapped(qualitiesList);
+
+    const professionsList = professions.map((profession) => ({
+      label: profession.name,
+      value: profession._id
+    }));
+    setProfessionWrapped(professionsList);
+
+    const user = getUserById(id);
+
+    // convert qualities from data storage format to component format
+    const newQualities = user.qualities?.map((qualityId) => {
+      const quality = getQuality(qualityId);
+      return {
+        label: quality.name,
+        value: quality._id,
+        color: quality.color
+      };
     });
-    api.qualities.fetchAll().then((data) => {
-      const qualitiesList = Object.keys(data).map((optionName) => ({
-        label: data[optionName].name,
-        value: data[optionName]._id,
-        color: data[optionName].color
-      }));
-      setQualities(qualitiesList);
-    });
-  }, []);
 
-  useEffect(() => {
-    api.users
-      .getById(id)
-      .then((user) => {
-        const { profession, qualities } = user;
-
-        // convert profession and qualities from data storage format to component format
-        const newQualities = [];
-        for (const quality of qualities) {
-          newQualities.push({
-            label: quality.name,
-            value: quality._id,
-            color: quality.color
-          });
-        }
-
-        const newUser = {
-          ...user,
-          profession: profession._id,
-          qualities: newQualities
-        };
-        setData(newUser);
-      })
-      .catch((e) => {
-        console.warn(`User #${id} not found`);
-      });
+    const newUser = {
+      ...user,
+      qualities: newQualities
+    };
+    setData(newUser);
   }, []);
 
   const handleChange = (target) => {
@@ -105,44 +95,19 @@ const EditForm = ({ id }) => {
     const isValid = validate();
     if (!isValid) return;
 
-    const { profession, qualities } = data;
+    // convert qualities to data storage format
+    const qualitiesId = data.qualities.map((quality) => quality.value);
 
-    // convert profession and qualities to data storage format
     const updatedUser = {
       ...data,
-      profession: getProfessionById(profession),
-      qualities: getQualities(qualities)
+      qualities: qualitiesId
     };
 
-    api.users.update(id, updatedUser);
+    updateUser(updatedUser);
     history.push(`/users/${id}`);
   };
 
-  const getProfessionById = (id) => {
-    for (const prof of professions) {
-      if (prof.value === id) {
-        return { _id: prof.value, name: prof.label };
-      }
-    }
-  };
-
-  const getQualities = (elements) => {
-    const qualitiesArray = [];
-    for (const elem of elements) {
-      for (const quality in qualities) {
-        if (elem.value === qualities[quality].value) {
-          qualitiesArray.push({
-            _id: qualities[quality].value,
-            name: qualities[quality].label,
-            color: qualities[quality].color
-          });
-        }
-      }
-    }
-    return qualitiesArray;
-  };
-
-  if (!data || !professions || qualities.length === 0) {
+  if (!data || !professionsWrapped || qualitiesWrapped.length === 0) {
     return <h5>Loading ...</h5>;
   }
 
@@ -171,7 +136,7 @@ const EditForm = ({ id }) => {
         value={data.profession}
         onChange={handleChange}
         defaultOption="Choose ..."
-        options={professions}
+        options={professionsWrapped}
         error={errors.profession}
       />
       <RadioField
@@ -187,7 +152,7 @@ const EditForm = ({ id }) => {
       />
       <MultiSelectField
         label="Choose your qualities"
-        options={qualities}
+        options={qualitiesWrapped}
         onChange={handleChange}
         name="qualities"
         defaultValue={data.qualities}
