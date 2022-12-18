@@ -128,6 +128,10 @@ const AuthProvider = ({ children }) => {
     }
   }
 
+  function setLocalUserData(data) {
+    setCurrentUser(data);
+  }
+
   function errorCatcher(error) {
     const { message } = error.response.data;
     setError(message);
@@ -135,7 +139,14 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ signUp, signIn, currentUser, isLoading, logOut }}
+      value={{
+        signUp,
+        signIn,
+        currentUser,
+        isLoading,
+        logOut,
+        setLocalUserData
+      }}
     >
       {!isLoading ? children : "Loading ..."}
     </AuthContext.Provider>

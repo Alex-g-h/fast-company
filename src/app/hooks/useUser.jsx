@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import userService from "../services/user.service";
 import { toast } from "react-toastify";
+import { useAuth } from "./useAuth";
 
 const UserContext = React.createContext();
 
@@ -13,6 +14,8 @@ const UserProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const { setLocalUserData } = useAuth();
 
   // initialize users async
   useEffect(() => {
@@ -47,6 +50,7 @@ const UserProvider = ({ children }) => {
         return user;
       });
       setUsers(newUsers);
+      setLocalUserData(content);
     } catch (error) {
       errorCatcher(error);
     }
