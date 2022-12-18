@@ -2,8 +2,11 @@ import React from "react";
 import Avatar from "../avatar";
 import { getElapsedTime } from "../../../utils/getElapsedTime";
 import PropTypes from "prop-types";
+import { useAuth } from "../../../hooks/useAuth";
 
 const Comment = ({ comment, handleCommentDelete }) => {
+  const { currentUser } = useAuth();
+
   return (
     <div className="d-flex flex-start">
       <Avatar
@@ -21,12 +24,14 @@ const Comment = ({ comment, handleCommentDelete }) => {
                 {getElapsedTime(Number(comment.created_at))}
               </span>
             </p>
-            <button
-              className="btn btn-sm text-primary d-flex align-items-center"
-              onClick={() => handleCommentDelete(comment._id)}
-            >
-              <i className="bi bi-x-lg"></i>
-            </button>
+            {comment.userId === currentUser._id && (
+              <button
+                className="btn btn-sm text-primary d-flex align-items-center"
+                onClick={() => handleCommentDelete(comment._id)}
+              >
+                <i className="bi bi-x-lg"></i>
+              </button>
+            )}
           </div>
           <p className="small mb-0">{comment.content}</p>
         </div>
