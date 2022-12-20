@@ -20,21 +20,10 @@ const LoginForm = () => {
 
   const validatorConfig = {
     email: {
-      isRequired: { message: "Email is required" },
-      isEmail: { message: "Wrong email address" }
+      isRequired: { message: "Email is required" }
     },
     password: {
-      isRequired: { message: "Password is required" },
-      isCapitalSymbol: {
-        message: "Password doesn't contain at least one capital letter"
-      },
-      isContainDigit: {
-        message: "Password doesn't contain at least one digit"
-      },
-      min: {
-        message: "Password must be at least 8 symbols",
-        value: 8
-      }
+      isRequired: { message: "Password is required" }
     }
   };
 
