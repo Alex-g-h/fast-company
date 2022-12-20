@@ -88,6 +88,16 @@ const AuthProvider = ({ children }) => {
           const errorObject = { email: "User with this e-mail already exists" };
           throw errorObject;
         }
+        if (message === "TOO_MANY_ATTEMPTS_TRY_LATER") {
+          const errorObject = { email: "Too many attempts. Try again later." };
+          throw errorObject;
+        }
+        if (message === "OPERATION_NOT_ALLOWED") {
+          const errorObject = {
+            email: "Sign in is not allowed by administrator"
+          };
+          throw errorObject;
+        }
       }
     }
   }
@@ -107,12 +117,12 @@ const AuthProvider = ({ children }) => {
       errorCatcher(error);
       const { code, message } = error.response.data.error;
       if (code === 400) {
-        if (message === "INVALID_PASSWORD") {
-          const errorObject = { password: "Invalid password" };
+        if (message === "EMAIL_NOT_FOUND" || message === "INVALID_PASSWORD") {
+          const errorObject = { email: "Invalid e-mail or password" };
           throw errorObject;
         }
-        if (message === "EMAIL_NOT_FOUND") {
-          const errorObject = { email: "E-mail not found" };
+        if (message === "USER_DISABLED") {
+          const errorObject = { email: "User disabled by administrator" };
           throw errorObject;
         }
       }
