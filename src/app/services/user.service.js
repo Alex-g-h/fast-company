@@ -19,7 +19,10 @@ const userService = {
     return data;
   },
   update: async (payload) => {
-    const { data } = await httpService.put(userEndpoit + payload._id, payload);
+    const { data } = await httpService.patch(
+      userEndpoit + payload._id,
+      payload
+    );
     return data;
   }
 };
