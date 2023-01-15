@@ -7,23 +7,31 @@ import MultiSelectField from "../common/form/multiSelectField";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
-import { useQuality } from "../../hooks/useQuality";
 import { useProfession } from "../../hooks/useProfession";
+import { useSelector } from "react-redux";
+import { getQualities, getQualitiesLoadingStatus } from "../store/qualities";
 
 const EditForm = ({ id }) => {
   const [data, setData] = useState();
+  const [isLoading, setIsLoading] = useState(true);
 
   const [errors, setErrors] = useState({});
   const [professionsWrapped, setProfessionWrapped] = useState();
   const [qualitiesWrapped, setQualitiesWrapped] = useState([]);
 
-  const { qualities, getQuality } = useQuality();
   const { professions } = useProfession();
   const { getUserById, updateUser } = useUser();
+
+  const qualities = useSelector(getQualities());
+  const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
+
+  const getQualityById = (id) => qualities.find((qual) => qual._id === id);
 
   const history = useHistory();
 
   useEffect(() => {
+    if (qualitiesLoading || data) return;
+
     const qualitiesList = qualities.map((quality) => ({
       label: quality.name,
       value: quality._id,
@@ -41,7 +49,7 @@ const EditForm = ({ id }) => {
 
     // convert qualities from data storage format to component format
     const newQualities = user.qualities?.map((qualityId) => {
-      const quality = getQuality(qualityId);
+      const quality = getQualityById(qualityId);
       return {
         label: quality.name,
         value: quality._id,
@@ -54,7 +62,13 @@ const EditForm = ({ id }) => {
       qualities: newQualities
     };
     setData(newUser);
-  }, []);
+  }, [qualitiesLoading, data]);
+
+  useEffect(() => {
+    if (data && isLoading) {
+      setIsLoading(false);
+    }
+  }, [data]);
 
   const handleChange = (target) => {
     setData((prevData) => ({
@@ -107,7 +121,7 @@ const EditForm = ({ id }) => {
     history.push(`/users/${id}`);
   };
 
-  if (!data || !professionsWrapped || qualitiesWrapped.length === 0) {
+  if (isLoading || !professionsWrapped || qualitiesWrapped.length === 0) {
     return <h5>Loading ...</h5>;
   }
 

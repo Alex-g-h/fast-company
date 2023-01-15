@@ -22,7 +22,7 @@ const UserPage = ({ id }) => {
         <div className="row gutters-sm">
           <div className="col-md-4 mb-3">
             <UserInfo user={user} />
-            <UserQualities qualities={qualities} />
+            <UserQualities qualitiesIds={qualities} />
             <UserCompletedMeetings completedMeetings={completedMeetings} />
           </div>
 

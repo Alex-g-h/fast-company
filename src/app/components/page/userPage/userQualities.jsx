@@ -1,10 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Quality } from "../../ui/qualities";
-import { useQuality } from "../../../hooks/useQuality";
+import { useSelector } from "react-redux";
+import { getQualitiesByIds } from "../../store/qualities";
 
-const UserQualities = ({ qualities }) => {
-  const { getQuality } = useQuality();
+const UserQualities = ({ qualitiesIds }) => {
+  const qualitiesList = useSelector(getQualitiesByIds(qualitiesIds));
 
   return (
     <div className="card mb-3">
@@ -13,8 +14,8 @@ const UserQualities = ({ qualities }) => {
           <span>Qualities</span>
         </h5>
         <p className="card-text">
-          {qualities?.map((qualityId) => (
-            <Quality key={qualityId} {...getQuality(qualityId)} />
+          {qualitiesList?.map((quality) => (
+            <Quality key={quality._id} {...quality} />
           ))}
         </p>
       </div>
@@ -23,7 +24,7 @@ const UserQualities = ({ qualities }) => {
 };
 
 UserQualities.propTypes = {
-  qualities: PropTypes.arrayOf(PropTypes.string)
+  qualitiesIds: PropTypes.arrayOf(PropTypes.string)
 };
 
 export default UserQualities;
