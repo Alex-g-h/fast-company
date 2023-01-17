@@ -6,35 +6,34 @@ import Main from "./layouts/main";
 import UsersLayout from "./layouts/users";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ProfessionProvider from "./hooks/useProfession";
 import AuthProvider from "./hooks/useAuth";
 import ProtectedRoute from "./components/common/protectedRoute";
 import LogOut from "./layouts/logout";
 import { useDispatch } from "react-redux";
 import { loadQualitiesList } from "./components/store/qualities";
+import { loadProfessionsList } from "./components/store/professions";
 
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(loadQualitiesList());
+    dispatch(loadProfessionsList());
   }, []);
 
   return (
     <>
       <AuthProvider>
         <NavBar />
-        <ProfessionProvider>
-          <Switch>
-            <Route path="/" exact component={Main} />
-            <Route path="/login/:type?" component={Login} />
-            <Route path="/logout" component={LogOut} />
-            <ProtectedRoute
-              path="/users/:userId?/:edit?"
-              component={UsersLayout}
-            />
-            <Redirect to="/" />
-          </Switch>
-        </ProfessionProvider>
+        <Switch>
+          <Route path="/" exact component={Main} />
+          <Route path="/login/:type?" component={Login} />
+          <Route path="/logout" component={LogOut} />
+          <ProtectedRoute
+            path="/users/:userId?/:edit?"
+            component={UsersLayout}
+          />
+          <Redirect to="/" />
+        </Switch>
       </AuthProvider>
       <ToastContainer />
     </>

@@ -7,9 +7,12 @@ import MultiSelectField from "../common/form/multiSelectField";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
-import { useProfession } from "../../hooks/useProfession";
 import { useSelector } from "react-redux";
 import { getQualities, getQualitiesLoadingStatus } from "../store/qualities";
+import {
+  getProfessions,
+  getProfessionsLoadingStatus
+} from "../store/professions";
 
 const EditForm = ({ id }) => {
   const [data, setData] = useState();
@@ -19,18 +22,20 @@ const EditForm = ({ id }) => {
   const [professionsWrapped, setProfessionWrapped] = useState();
   const [qualitiesWrapped, setQualitiesWrapped] = useState([]);
 
-  const { professions } = useProfession();
   const { getUserById, updateUser } = useUser();
 
+  const professions = useSelector(getProfessions());
+  const isLoadingProfession = useSelector(getProfessionsLoadingStatus());
+
   const qualities = useSelector(getQualities());
-  const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
+  const isLoadingQualities = useSelector(getQualitiesLoadingStatus());
 
   const getQualityById = (id) => qualities.find((qual) => qual._id === id);
 
   const history = useHistory();
 
   useEffect(() => {
-    if (qualitiesLoading || data) return;
+    if (isLoadingQualities || isLoadingProfession || data) return;
 
     const qualitiesList = qualities.map((quality) => ({
       label: quality.name,
@@ -62,7 +67,7 @@ const EditForm = ({ id }) => {
       qualities: newQualities
     };
     setData(newUser);
-  }, [qualitiesLoading, data]);
+  }, [isLoadingQualities, isLoadingProfession, data]);
 
   useEffect(() => {
     if (data && isLoading) {
