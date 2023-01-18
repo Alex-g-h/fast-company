@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
 import Avatar from "../common/avatar";
+import { getCurrentUserData } from "../store/users";
 
 const NavProfile = () => {
-  const { currentUser } = useAuth();
+  const currentUser = useSelector(getCurrentUserData());
+
   const [isOpen, setOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -27,6 +29,8 @@ const NavProfile = () => {
       setOpen(false);
     });
   }, []);
+
+  if (!currentUser) return "Loading ...";
 
   return (
     <div className="dropdown" id="nav-profile" onClick={toggleDropdown}>

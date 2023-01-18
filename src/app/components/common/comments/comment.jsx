@@ -2,10 +2,11 @@ import React from "react";
 import Avatar from "../avatar";
 import { getElapsedTime } from "../../../utils/getElapsedTime";
 import PropTypes from "prop-types";
-import { useAuth } from "../../../hooks/useAuth";
+import { useSelector } from "react-redux";
+import { getCurrentUserId } from "../../store/users";
 
 const Comment = ({ comment, handleCommentDelete }) => {
-  const { currentUser } = useAuth();
+  const currentUserId = useSelector(getCurrentUserId());
 
   return (
     <div className="d-flex flex-start">
@@ -24,7 +25,7 @@ const Comment = ({ comment, handleCommentDelete }) => {
                 {getElapsedTime(Number(comment.created_at))}
               </span>
             </p>
-            {comment.userId === currentUser._id && (
+            {comment.userId === currentUserId && (
               <button
                 className="btn btn-sm text-primary d-flex align-items-center"
                 onClick={() => handleCommentDelete(comment._id)}

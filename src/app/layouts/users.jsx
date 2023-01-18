@@ -3,7 +3,6 @@ import UserPage from "../components/page/userPage";
 import UsersListPage from "../components/page/usersListPage";
 import UserEditPage from "../components/page/userEditPage";
 import { useHistory, useParams } from "react-router-dom";
-import UserProvider from "../hooks/useUser";
 import UsersLoader from "../components/ui/hoc/usersLoader";
 import { useSelector } from "react-redux";
 import { getCurrentUserId } from "../components/store/users";
@@ -28,9 +27,7 @@ const UsersLayout = () => {
       <UsersLoader>
         {userId ? (
           edit && edit === "edit" ? (
-            <UserProvider>
-              <UserEditPage id={userId} />
-            </UserProvider>
+            <UserEditPage id={userId} />
           ) : (
             <UserPage id={userId} />
           )

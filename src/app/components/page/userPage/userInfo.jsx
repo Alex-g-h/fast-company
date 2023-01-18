@@ -3,17 +3,17 @@ import PropTypes from "prop-types";
 import Rating from "../../common/rating";
 import Avatar from "../../common/avatar";
 import { useHistory } from "react-router-dom";
-import { useAuth } from "../../../hooks/useAuth";
 import { useSelector } from "react-redux";
 import { getProfessionById } from "../../store/professions";
+import { getCurrentUserId } from "../../store/users";
 
 const UserInfo = ({ user }) => {
   const history = useHistory();
   const { _id: id, name, profession, image, rate } = user;
   const { name: professionName } = useSelector(getProfessionById(profession));
-  const { currentUser } = useAuth();
+  const currentUserId = useSelector(getCurrentUserId());
 
-  const isUserACurrentUser = user._id === currentUser._id;
+  const isUserACurrentUser = user._id === currentUserId;
 
   return (
     <div className="card mb-3">

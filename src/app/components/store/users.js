@@ -52,6 +52,22 @@ const usersSlice = createSlice({
         state.entities = [];
       }
       state.entities.push(action.payload);
+    },
+    userLoggedOut: (state) => {
+      state.isLoggedIn = false;
+      state.auth = null;
+      state.entities = null;
+      state.dataLoaded = false;
+    },
+    userUpdated: (state, action) => {
+      // update users array with modified current user
+      const newUsers = state.entities.map((user) => {
+        if (user._id === action.payload._id) {
+          return action.payload;
+        }
+        return user;
+      });
+      state.entities = newUsers;
     }
   }
 });
@@ -63,7 +79,9 @@ const {
   usersRequestFailed,
   authRequestSuccess,
   authRequestFailed,
-  userCreated
+  userCreated,
+  userLoggedOut,
+  userUpdated
 } = actions;
 
 export const loadUsersList = () => async (dispatch, getState) => {
@@ -79,6 +97,8 @@ export const loadUsersList = () => async (dispatch, getState) => {
 const authRequested = createAction("users/authRequested");
 const userCreateRequested = createAction("users/userCreateRequested");
 const userCreateFailed = createAction("users/userCreateFailed");
+const userUpdateRequested = createAction("users/userUpdate");
+const userUpdateFailed = createAction("users/userUpdateFailed");
 
 export const signUp =
   ({ email, password, name, ...rest }) =>
@@ -119,6 +139,12 @@ export const signIn =
     }
   };
 
+export const logOut = () => (dispatch) => {
+  localStorageService.removeAuthData();
+  dispatch(userLoggedOut());
+  history.push("/");
+};
+
 function createUser(payload) {
   return async function (dispatch) {
     dispatch(userCreateRequested);
@@ -132,6 +158,17 @@ function createUser(payload) {
   };
 }
 
+export const updateUser = (payload) => async (dispatch, getState) => {
+  dispatch(userUpdateRequested());
+  try {
+    const { content } = await userService.update(payload);
+    dispatch(userUpdated(content));
+    history.push(`/users/${payload._id}`);
+  } catch (error) {
+    dispatch(userUpdateFailed(error.message));
+  }
+};
+
 export const getUsers = () => (state) => state.users.entities;
 export const getUsersLoadingStatus = () => (state) => state.users.isLoading;
 export const getUserById = (userId) => (state) => {
@@ -144,5 +181,10 @@ export const getUserById = (userId) => (state) => {
 export const getIsLoggedIn = () => (state) => state.users.isLoggedIn;
 export const getDataStatus = () => (state) => state.users.dataLoaded;
 export const getCurrentUserId = () => (state) => state.users.auth.userId;
+export const getCurrentUserData = () => (state) => {
+  return state.users.entities
+    ? state.users.entities.find((u) => u._id === state.users.auth?.userId)
+    : null;
+};
 
 export default usersReducer;

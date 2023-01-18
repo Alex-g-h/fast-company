@@ -5,15 +5,13 @@ import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import PropTypes from "prop-types";
-import { useHistory } from "react-router-dom";
-import { useUser } from "../../hooks/useUser";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getQualities, getQualitiesLoadingStatus } from "../store/qualities";
 import {
   getProfessions,
   getProfessionsLoadingStatus
 } from "../store/professions";
-import { getUserById, getUsersLoadingStatus } from "../store/users";
+import { getUserById, getUsersLoadingStatus, updateUser } from "../store/users";
 
 const EditForm = ({ id }) => {
   const [data, setData] = useState();
@@ -23,7 +21,7 @@ const EditForm = ({ id }) => {
   const [professionsWrapped, setProfessionWrapped] = useState();
   const [qualitiesWrapped, setQualitiesWrapped] = useState([]);
 
-  const { updateUser } = useUser();
+  const dispatch = useDispatch();
 
   const user = useSelector(getUserById(id));
   const isLoadingUsers = useSelector(getUsersLoadingStatus());
@@ -35,8 +33,6 @@ const EditForm = ({ id }) => {
   const isLoadingQualities = useSelector(getQualitiesLoadingStatus());
 
   const getQualityById = (id) => qualities.find((qual) => qual._id === id);
-
-  const history = useHistory();
 
   useEffect(() => {
     if (isLoadingUsers || isLoadingQualities || isLoadingProfession || data) {
@@ -126,8 +122,7 @@ const EditForm = ({ id }) => {
       qualities: qualitiesId
     };
 
-    updateUser(updatedUser);
-    history.push(`/users/${id}`);
+    dispatch(updateUser(updatedUser));
   };
 
   if (isLoading || !professionsWrapped || qualitiesWrapped.length === 0) {
