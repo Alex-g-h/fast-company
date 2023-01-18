@@ -4,36 +4,40 @@ import UsersListPage from "../components/page/usersListPage";
 import UserEditPage from "../components/page/userEditPage";
 import { useHistory, useParams } from "react-router-dom";
 import UserProvider from "../hooks/useUser";
-import { useAuth } from "../hooks/useAuth";
+import UsersLoader from "../components/ui/hoc/usersLoader";
+import { useSelector } from "react-redux";
+import { getCurrentUserId } from "../components/store/users";
 
 const UsersLayout = () => {
   const params = useParams();
   const { userId, edit } = params;
 
-  const { currentUser } = useAuth();
+  const currentUserId = useSelector(getCurrentUserId());
   const history = useHistory();
 
   useEffect(() => {
     if (userId && edit && edit === "edit") {
-      if (currentUser._id !== userId) {
-        history.push(`/users/${currentUser._id}/edit`);
+      if (currentUserId !== userId) {
+        history.push(`/users/${currentUserId}/edit`);
       }
     }
   }, []);
 
   return (
     <>
-      <UserProvider>
+      <UsersLoader>
         {userId ? (
           edit && edit === "edit" ? (
-            <UserEditPage id={userId} />
+            <UserProvider>
+              <UserEditPage id={userId} />
+            </UserProvider>
           ) : (
             <UserPage id={userId} />
           )
         ) : (
           <UsersListPage />
         )}
-      </UserProvider>
+      </UsersLoader>
     </>
   );
 };

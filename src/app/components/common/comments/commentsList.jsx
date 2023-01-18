@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Comment from "./comment";
-import { useUser } from "../../../hooks/useUser";
 import { useComment } from "../../../hooks/useComment";
+import { useSelector } from "react-redux";
+import { getUsers } from "../../store/users";
 
 const CommentsList = () => {
   const [commentsWithName, setCommentsWithName] = useState([]);
 
-  const { getUserById } = useUser();
+  const users = useSelector(getUsers());
+  const getUserById = (userId) => users.find((user) => user._id === userId);
+
   const { comments, removeComment } = useComment(); // get all comments for this/opened user
 
   async function fetchComments() {

@@ -13,6 +13,7 @@ import {
   getProfessions,
   getProfessionsLoadingStatus
 } from "../store/professions";
+import { getUserById, getUsersLoadingStatus } from "../store/users";
 
 const EditForm = ({ id }) => {
   const [data, setData] = useState();
@@ -22,7 +23,10 @@ const EditForm = ({ id }) => {
   const [professionsWrapped, setProfessionWrapped] = useState();
   const [qualitiesWrapped, setQualitiesWrapped] = useState([]);
 
-  const { getUserById, updateUser } = useUser();
+  const { updateUser } = useUser();
+
+  const user = useSelector(getUserById(id));
+  const isLoadingUsers = useSelector(getUsersLoadingStatus());
 
   const professions = useSelector(getProfessions());
   const isLoadingProfession = useSelector(getProfessionsLoadingStatus());
@@ -35,7 +39,9 @@ const EditForm = ({ id }) => {
   const history = useHistory();
 
   useEffect(() => {
-    if (isLoadingQualities || isLoadingProfession || data) return;
+    if (isLoadingUsers || isLoadingQualities || isLoadingProfession || data) {
+      return;
+    }
 
     const qualitiesList = qualities.map((quality) => ({
       label: quality.name,
@@ -49,8 +55,6 @@ const EditForm = ({ id }) => {
       value: profession._id
     }));
     setProfessionWrapped(professionsList);
-
-    const user = getUserById(id);
 
     // convert qualities from data storage format to component format
     const newQualities = user.qualities?.map((qualityId) => {
@@ -67,7 +71,7 @@ const EditForm = ({ id }) => {
       qualities: newQualities
     };
     setData(newUser);
-  }, [isLoadingQualities, isLoadingProfession, data]);
+  }, [isLoadingUsers, isLoadingQualities, isLoadingProfession, data]);
 
   useEffect(() => {
     if (data && isLoading) {

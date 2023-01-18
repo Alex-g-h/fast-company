@@ -5,12 +5,12 @@ import NewCommentForm from "../../common/comments/newCommentForm";
 import UserCompletedMeetings from "./userCompletedMeetings";
 import UserQualities from "./userQualities";
 import UserInfo from "./userInfo";
-import { useUser } from "../../../hooks/useUser";
 import CommentProvider from "../../../hooks/useComment";
+import { useSelector } from "react-redux";
+import { getUserById } from "../../store/users";
 
 const UserPage = ({ id }) => {
-  const { getUserById } = useUser();
-  const user = getUserById(id);
+  const user = useSelector(getUserById(id));
 
   if (!user) return "Loading ...";
 
