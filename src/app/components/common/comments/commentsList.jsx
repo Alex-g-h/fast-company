@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Comment from "./comment";
-import { useComment } from "../../../hooks/useComment";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../../store/users";
+import {
+  getComments,
+  getCommentsLoadingStatus,
+  loadCommentsList,
+  removeComment
+} from "../../store/comments";
+import { useParams } from "react-router-dom";
 
 const CommentsList = () => {
   const [commentsWithName, setCommentsWithName] = useState([]);
@@ -10,7 +16,10 @@ const CommentsList = () => {
   const users = useSelector(getUsers());
   const getUserById = (userId) => users.find((user) => user._id === userId);
 
-  const { comments, removeComment } = useComment(); // get all comments for this/opened user
+  const dispatch = useDispatch();
+  const isLoading = useSelector(getCommentsLoadingStatus());
+  const comments = useSelector(getComments());
+  const { userId } = useParams();
 
   async function fetchComments() {
     // get commentators ID and unify their
@@ -42,11 +51,16 @@ const CommentsList = () => {
   }
 
   useEffect(() => {
+    dispatch(loadCommentsList(userId));
+  }, [userId]);
+
+  useEffect(() => {
+    if (!comments) return;
     fetchComments();
   }, [comments]);
 
   const handleCommentDelete = (id) => {
-    removeComment(id);
+    dispatch(removeComment(id));
   };
 
   const isLoadingOrEmpty = commentsWithName.length === 0;
@@ -63,16 +77,18 @@ const CommentsList = () => {
       <div className="card-body">
         <h2>Comments</h2>
         <hr />
-        {commentsWithName.map((comment) => (
-          <div key={comment._id} className="bg-light card-body mb-3">
-            <div className="row">
-              <Comment
-                comment={comment}
-                handleCommentDelete={handleCommentDelete}
-              />
-            </div>
-          </div>
-        ))}
+        {!isLoading
+          ? commentsWithName.map((comment) => (
+              <div key={comment._id} className="bg-light card-body mb-3">
+                <div className="row">
+                  <Comment
+                    comment={comment}
+                    handleCommentDelete={handleCommentDelete}
+                  />
+                </div>
+              </div>
+            ))
+          : "Loading..."}
       </div>
     </div>
   );

@@ -5,7 +5,6 @@ import NewCommentForm from "../../common/comments/newCommentForm";
 import UserCompletedMeetings from "./userCompletedMeetings";
 import UserQualities from "./userQualities";
 import UserInfo from "./userInfo";
-import CommentProvider from "../../../hooks/useComment";
 import { useSelector } from "react-redux";
 import { getUserById } from "../../store/users";
 
@@ -27,10 +26,8 @@ const UserPage = ({ id }) => {
           </div>
 
           <div className="col-md-8">
-            <CommentProvider>
-              <NewCommentForm />
-              <CommentsList />
-            </CommentProvider>
+            <NewCommentForm />
+            <CommentsList />
           </div>
         </div>
       </div>

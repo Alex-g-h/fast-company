@@ -1,15 +1,25 @@
 import React, { useState } from "react";
-import { useComment } from "../../../hooks/useComment";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { createComment } from "../../store/comments";
+import { getCurrentUserId } from "../../store/users";
 import TextAreaField from "../form/textAreaField";
 
 const NewCommentForm = () => {
   const [commentMessage, setCommentMessage] = useState("");
-  const { createComment } = useComment();
+  const dispatch = useDispatch();
+
+  const { userId } = useParams();
+  const currentUserId = useSelector(getCurrentUserId());
 
   const handleSendMessage = (target) => {
-    createComment({
-      content: commentMessage
-    });
+    dispatch(
+      createComment({
+        content: commentMessage,
+        pageId: userId,
+        userId: currentUserId
+      })
+    );
 
     setCommentMessage(""); // cleaning up the form
   };
