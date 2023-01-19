@@ -15,7 +15,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <Router basename="/fast-company" history={history}>
+      <Router history={history}>
         <App />
       </Router>
     </Provider>
