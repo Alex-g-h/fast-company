@@ -3,14 +3,15 @@ import TextField from "../common/form/textField";
 import { validator } from "../../utils/validator";
 import CheckBoxField from "../common/form/checkBoxField";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { signIn } from "../store/users";
+import { useDispatch, useSelector } from "react-redux";
+import { getAuthErrors, signIn } from "../store/users";
 
 const LoginForm = () => {
   const [data, setData] = useState({ email: "", password: "", stayOn: false });
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const history = useHistory();
+  const loginError = useSelector(getAuthErrors());
 
   const handleChange = (target) => {
     setData((prevData) => ({
@@ -76,6 +77,7 @@ const LoginForm = () => {
       <CheckBoxField value={data.stayOn} onChange={handleChange} name="stayOn">
         Keep on login
       </CheckBoxField>
+      {loginError && <p className="text-danger">{loginError}</p>}
       <button
         type="submit"
         disabled={!isValid}
