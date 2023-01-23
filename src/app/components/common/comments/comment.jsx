@@ -8,6 +8,8 @@ import { getCurrentUserId } from "../../store/users";
 const Comment = ({ comment, handleCommentDelete }) => {
   const currentUserId = useSelector(getCurrentUserId());
 
+  const isAuthor = comment.userId === currentUserId;
+
   return (
     <div className="d-flex flex-start">
       <Avatar
@@ -25,7 +27,7 @@ const Comment = ({ comment, handleCommentDelete }) => {
                 {getElapsedTime(Number(comment.created_at))}
               </span>
             </p>
-            {comment.userId === currentUserId && (
+            {isAuthor && (
               <button
                 className="btn btn-sm text-primary d-flex align-items-center"
                 onClick={() => handleCommentDelete(comment._id)}

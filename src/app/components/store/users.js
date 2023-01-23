@@ -9,7 +9,7 @@ import generateAuthError from "../../utils/generateAuthError";
 
 const initialState = localStorageService.getAccessToken()
   ? {
-      entities: null,
+      entities: [],
       isLoading: true,
       error: null,
       auth: { userId: localStorageService.getUserId() },
@@ -17,7 +17,7 @@ const initialState = localStorageService.getAccessToken()
       dataLoaded: false
     }
   : {
-      entities: null,
+      entities: [],
       isLoading: false,
       error: null,
       auth: null,
@@ -49,9 +49,6 @@ const usersSlice = createSlice({
       state.error = action.payload;
     },
     userCreated: (state, action) => {
-      if (!Array.isArray(state.entities)) {
-        state.entities = [];
-      }
       state.entities.push(action.payload);
     },
     userLoggedOut: (state) => {
@@ -182,19 +179,14 @@ export const updateUser = (payload) => async (dispatch, getState) => {
 export const getUsers = () => (state) => state.users.entities;
 export const getUsersLoadingStatus = () => (state) => state.users.isLoading;
 export const getUserById = (userId) => (state) => {
-  if (state.users.entities) {
-    return state.users.entities.find((user) => user._id === userId);
-  }
-  return null;
+  return state.users?.entities?.find((user) => user._id === userId);
 };
 
 export const getIsLoggedIn = () => (state) => state.users.isLoggedIn;
 export const getDataStatus = () => (state) => state.users.dataLoaded;
 export const getCurrentUserId = () => (state) => state.users.auth.userId;
 export const getCurrentUserData = () => (state) => {
-  return state.users.entities
-    ? state.users.entities.find((u) => u._id === state.users.auth?.userId)
-    : null;
+  return state.users?.entities?.find((u) => u._id === state.users.auth?.userId);
 };
 
 export const getAuthErrors = () => (state) => state.users.error;
