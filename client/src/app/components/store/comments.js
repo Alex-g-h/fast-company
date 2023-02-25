@@ -1,6 +1,6 @@
 import { createAction, createSlice } from "@reduxjs/toolkit";
 import commentService from "../../services/comment.service";
-import { nanoid } from "nanoid";
+import { customAlphabet } from "nanoid";
 
 const commentsSlice = createSlice({
   name: "comments",
@@ -73,6 +73,7 @@ export const removeComment = (id) => async (dispatch) => {
 export const createComment = (data) => async (dispatch) => {
   dispatch(commentCreateRequested());
   try {
+    const nanoid = customAlphabet("1234567890abcdef", 24);
     const comment = {
       ...data,
       _id: nanoid(),

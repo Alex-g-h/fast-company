@@ -16,18 +16,21 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-router.post("/", auth, async (req, res) => {
+router.put("/:commentId", auth, async (req, res) => {
   try {
+    const commentId = req.params;
+
     const newComment = await Comment.create({
       ...req.body,
       userId: req.user._id,
+      commentId,
     });
 
     res.status(201).send(newComment);
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Server side error occurred. Try again later" });
+      .json({ message: "Server side error occurred. Try again later", error });
   }
 });
 
