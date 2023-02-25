@@ -9,15 +9,17 @@ const http = axios.create({ baseURL: configFile.apiEndpoint });
 
 http.interceptors.request.use(
   async function (config) {
+    const expiresDate = localStorageService.getTokenExpiresDate();
+    const refreshToken = localStorageService.getRefreshToken();
+    const isExpired = refreshToken && expiresDate < Date.now();
+
     if (configFile.isFireBase) {
       const containSlash = /\/$/gi.test(config.url);
       config.url =
         (containSlash ? config.url.slice(0, -1) : config.url) + ".json";
 
       // refresh Auth token if it already have expired
-      const expiresDate = localStorageService.getTokenExpiresDate();
-      const refreshToken = localStorageService.getRefreshToken();
-      if (refreshToken && expiresDate < Date.now()) {
+      if (isExpired) {
         const data = await authService.refresh();
         localStorageService.setTokens({
           refreshToken: data.refresh_token,
@@ -32,7 +34,23 @@ http.interceptors.request.use(
       if (accessToken) {
         config.params = { ...config.params, auth: accessToken };
       }
+    } else {
+      // refresh Auth token if it already have expired
+      if (isExpired) {
+        const data = await authService.refresh();
+        localStorageService.setTokens(data);
+      }
+
+      // add Auth to request
+      const accessToken = localStorageService.getAccessToken();
+      if (accessToken) {
+        config.params = {
+          ...config.params,
+          Authorization: `Bearer ${accessToken}`
+        };
+      }
     }
+
     return config;
   },
   function (error) {
