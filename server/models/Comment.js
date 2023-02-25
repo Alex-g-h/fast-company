@@ -1,8 +1,5 @@
 const { Schema, model } = require("mongoose");
 
-content: string;
-pageId: userId: string;
-
 const schema = new Schema(
   {
     content: { type: String, required: true },
