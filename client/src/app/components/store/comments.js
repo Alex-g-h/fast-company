@@ -76,8 +76,7 @@ export const createComment = (data) => async (dispatch) => {
     const nanoid = customAlphabet("1234567890abcdef", 24);
     const comment = {
       ...data,
-      _id: nanoid(),
-      created_at: Date.now()
+      _id: nanoid()
     };
 
     const { content } = await commentService.createComment(comment);
