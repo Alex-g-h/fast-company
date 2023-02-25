@@ -3,7 +3,6 @@ const config = require("config");
 const Token = require("../models/Token");
 
 class TokenService {
-  // return accessToken, refreshToken, expiresIn
   generate(payload) {
     const accessToken = jwt.sign(payload, config.get("accessSecret"), {
       expiresIn: "1h",
@@ -38,6 +37,14 @@ class TokenService {
   async findToken(refreshToken) {
     try {
       return await Token.findOne({ refreshToken });
+    } catch (error) {
+      return null;
+    }
+  }
+
+  validateAccess(accessToken) {
+    try {
+      return jwt.verify(accessToken, config.get("accessSecret"));
     } catch (error) {
       return null;
     }
