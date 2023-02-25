@@ -44,8 +44,8 @@ http.interceptors.request.use(
       // add Auth to request
       const accessToken = localStorageService.getAccessToken();
       if (accessToken) {
-        config.params = {
-          ...config.params,
+        config.headers = {
+          ...config.headers,
           Authorization: `Bearer ${accessToken}`
         };
       }
@@ -70,6 +70,8 @@ http.interceptors.response.use(
   (res) => {
     if (configFile.isFireBase) {
       res.data = { content: transformData(res.data) };
+    } else {
+      res.data = { content: res.data };
     }
     return res;
   },
