@@ -28,7 +28,7 @@ router.post("/signUp", [
           error: {
             message: "INVALID_DATA",
             code: 400,
-            // errors: errors.array(),
+            errors: errors.array(),
           },
         });
       }
@@ -55,9 +55,10 @@ router.post("/signUp", [
 
       res.status(201).send({ ...tokens, userId: newUser._id });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Server side error occurred. Try again later" });
+      res.status(500).json({
+        message: "Server side error occurred. Try again later",
+        error,
+      });
     }
   },
 ]);
