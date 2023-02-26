@@ -37,19 +37,19 @@ router.put("/:commentId", auth, async (req, res) => {
 router.delete("/:commentId", auth, async (req, res) => {
   try {
     const { commentId } = req.params;
-    // const removedComment = await Comment.findById(commentId);
-    const removedComment = await Comment.find({ _id: commentId });
+    const removedComment = await Comment.findById(commentId);
 
     if (removedComment.userId.toString() === req.user._id) {
       await removedComment.remove();
-      return res.send(null);
+      res.send(null);
     } else {
       res.status(401).json({ message: "Unauthorized" });
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Server side error occurred. Try again later" });
+    res.status(500).json({
+      message: "Server side error occurred. Try again later",
+      error: error,
+    });
   }
 });
 
