@@ -24,7 +24,7 @@ const Comment = ({ comment, handleCommentDelete }) => {
               {comment.name}
               <span className="small">
                 {" "}
-                {getElapsedTime(Number(comment.created_at))}
+                {getElapsedTime(comment.created_at)}
               </span>
             </p>
             {isAuthor && (

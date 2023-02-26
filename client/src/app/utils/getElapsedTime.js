@@ -8,7 +8,7 @@ export function getElapsedTime(timestamp) {
 
   const now = Date.now();
   const date = new Date(timestamp);
-  const timeElapsedMs = now - timestamp;
+  const timeElapsedMs = now - date.getTime();
 
   // long time processing
   if (timeElapsedMs >= 365 * MS_IN_DAY) {
