@@ -1,5 +1,4 @@
 {
-  "homepage": "https://Alex-g-h.github.io/fast-company",
   "name": "fast-company",
   "version": "0.1.0",
   "private": true,
@@ -62,8 +61,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.3.0",
     "eslint-plugin-promise": "^6.0.1",
-    "eslint-plugin-react": "^7.31.8",
-    "gh-pages": "^4.0.0"
+    "eslint-plugin-react": "^7.31.8"
   },
   "jest": {
     "verbose": true,
